@@ -1,0 +1,7 @@
+- Wie heeft er een pakket van 1.5 kg? Al Gore's Head
+
+SELECT client.name FROM client LEFT JOIN package on client.accountnumber = package.recipient WHERE package.weight='1.5'
+
+- Hoeveel is het total gewicht wat deze klant heeft verstuurd? 17kg
+
+SELECT sum(package.weight) FROM client LEFT JOIN package on client.accountnumber = package.recipient WHERE package.sender='2'

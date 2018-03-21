@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "SQLiteCpp.h"
+#include "textBlock.h"
 
 class ofApp : public ofBaseApp {
 
@@ -17,7 +18,6 @@ public:
 
 private:
 	ofTrueTypeFont font;
-	ofTrueTypeFont itemFont;
 	ofTrueTypeFont circleFont;
 
 	ofEasyCam cam;
@@ -31,12 +31,19 @@ private:
 	ofColor allergieLichtGroen = ofColor::fromHex(0x9bff41);
 	ofColor allergieDonkerGroen = ofColor::fromHex(0x73b52d);
 
-	ofParameter<float> hateRadius;
-	ofParameter<float> annoyanceRadius;
 	ofParameter<float> zoneCircleRadius;
+
+	float zoneKutRadius;
 
 	map<string, double> annoyanceByZone;
 
-	string zones[5] = {"Kut", "Irritant", "Neutraal", "Prima", "Geweldig"};
+	string zones[5] = {"kut", "irritant", "neutraal", "prima", "geweldig"};
+
+	vector<textBlock> textBlocks;
+
+	void dataDing(string content, string zone, string category);
+
+	int a = 0;
+
 
 };
