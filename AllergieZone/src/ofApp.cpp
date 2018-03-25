@@ -2,19 +2,20 @@
 
 void ofApp::setup() {
 	gui.setup("Instellingen", "settings.xml");
-	//gui.add(xPos.set("xPos", 0, 0, -3000));
-	//gui.add(yPos.set("yPos", 0, 0, -3000));
+	gui.add(xPos.set("xPos", 0, 0, -3000));
+	gui.add(yPos.set("yPos", 0, 0, 3000));
 
 	ofSetCircleResolution(60);
+
 	font.load("Futura PT Heavy.ttf", 200);
 	circleFont.load("Futura PT Heavy.ttf", 50);
-	
+	ripple.load("Ripple.png");
+
 	string databasePath = ofToDataPath("allergiezonedb.db", true);
 	db = new SQLite::Database(databasePath);
 	
 	ofSetBackgroundColor(ofColor(249, 249, 225));
-	cam.setDistance(4000);
-	cam.disableMouseInput();
+	cam.setPosition(0, 0, 4000);
 
 	query = new SQLite::Statement(*db, "select gk.name, s.stellingid, s.stelling, c.categorie, gk.zone from stellingen s left join GebruikerKeuze gk on s.stellingId = gk.stellingId left join categorie c on c.categorieId = s.categorieId where gk.name=?");
 	queryCompare = new SQLite::Statement(*db, "select gk.name, s.stellingid, s.stelling, c.categorie, gk.zone from stellingen s left join GebruikerKeuze gk on s.stellingId = gk.stellingId left join categorie c on c.categorieId = s.categorieId where gk.name=?");
@@ -66,6 +67,10 @@ void ofApp::draw() {
 	ofSetColor(allergieDonkerGroen);
 	ofCircle(0, 0, zoneCircleRadius * 5);
 
+
+	ofSetColor(allergieRood);
+	ripple.draw(-205, 20, 410, 25);
+	
 	ofSetColor(tekstZwart);
 	circleFont.drawString("Allergie zone", -200, 0);
 	circleFont.drawString("Kut", zoneCircleRadius + 10, 0);
@@ -114,9 +119,16 @@ void ofApp::draw() {
 	}
 	queryCompare->reset();
 
-	ofLog() << currentUser << endl;
-	cout << userNames[currentUser] << endl;
+	//ofLog() << currentUser << endl;
+	//cout << userNames[currentUser] << endl;
+	mousePos = ofVec3f(ofGetMouseX(), ofGetMouseY(), 4000);
+
+	worldMousePos = cam.screenToWorld(ofVec3f(ofGetMouseX(), ofGetMouseY(), 0), ofGetCurrentViewport());
+
+	ofLog() << worldMousePos << endl;
+	
 	cam.end();
+
 
 }
 
@@ -153,20 +165,17 @@ void ofApp::mouseMoved(int x, int y) {
 void ofApp::mousePressed(int x, int y, int button) {
 	if (button == 0 && zoomedIn == false) {
 
-		ofVec3f mousePos = cam.screenToWorld(ofVec3f(float(mouseX), float(mouseY), 0));
-
-		ofLog() << mousePos << endl;
-		//ofVec3f mousePos(float(mouseX), float(mouseY), 0);
-
-		//cam.setPosition(cam.screenToWorld(mousePos));
+		//cam.setPosition(mousePos.x, mousePos.y, 2000);
+		zoomIn();
 		zoomedIn = true;
-
 	}
 	else
 	{
 		cam.setPosition(0, 0, 4000);
 		zoomedIn = false;
+
 	}
+	
 }
 void ofApp::dataDing(string content, string zone, string category) {
 	
@@ -182,5 +191,10 @@ void ofApp::dataDingCompare(string content, string zone, string category) {
 	textBlocksCompare.push_back(newTextBlockCompare);
 	b++;
 
+
+}
+void ofApp::zoomIn()
+{
+	cam.setPosition(worldMousePos.x, worldMousePos.y, 2000);
 
 }

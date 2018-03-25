@@ -21,7 +21,8 @@ private:
 	ofTrueTypeFont font;
 	ofTrueTypeFont circleFont;
 
-	ofEasyCam cam;
+	ofCamera cam;
+
 	ofxPanel gui;
 
 	SQLite::Database* db;
@@ -36,6 +37,8 @@ private:
 	ofColor allergieLichtGroen = ofColor::fromHex(0x9bff41);
 	ofColor allergieDonkerGroen = ofColor::fromHex(0x73b52d);
 	
+	ofImage ripple;
+
 	ofParameter<float> xPos;
 	ofParameter<float> yPos;
 
@@ -49,6 +52,9 @@ private:
 	float zoneCircleRadius = 350;
 	bool zoomedIn = false;
 
+	ofVec3f mousePos;
+	ofVec3f worldMousePos;
+
 	map<string, double> annoyanceByZone;
 
 	string zones[5] = {"kut", "irritant", "neutraal", "prima", "geweldig"};
@@ -59,6 +65,6 @@ private:
 
 	void dataDing(string content, string zone, string category);
 	void dataDingCompare(string content, string zone, string category);
-
+	void zoomIn();
 
 };

@@ -35,7 +35,6 @@ void textBlock::setup(string textContent, string textZone, string textCategory) 
 		innerCircleRadius = 1400;
 	}
 
-	ofLog() << zone << endl;
 	itemFont.load("Futura PT Book.ttf", 25);
 	
 	//Zorg ervoor dat hij binnen de circle wordt getekend
