@@ -8,32 +8,31 @@ void textBlock::setup(string textContent, string textZone, string textCategory) 
 	text = textContent;
 	zone = textZone;
 	category = textCategory;
-	
 
-	if (zone == "kut")
+	if (zone == "Kut")
 	{
-		cricleRadius = 180;
+		cricleRadius = 350;
 		innerCircleRadius = 0;
 	}
-	else if (zone == "irritant")
+	else if (zone == "Irritant")
 	{
-		cricleRadius = 360;
-		innerCircleRadius = 180;
+		cricleRadius = 700;
+		innerCircleRadius = 350;
 	}
-	else if (zone == "neutraal")
+	else if (zone == "Neutraal")
 	{
-		cricleRadius = 540;
-		innerCircleRadius = 360;
+		cricleRadius = 1050;
+		innerCircleRadius = 700;
 	}
-	else if (zone == "prima")
+	else if (zone == "Prima")
 	{
-		cricleRadius = 720;
-		innerCircleRadius = 540;
+		cricleRadius = 1400;
+		innerCircleRadius = 1050;
 	}
-	else if (zone == "geweldig")
+	else if (zone == "Geweldig")
 	{
-		cricleRadius = 900;
-		innerCircleRadius = 720;
+		cricleRadius = 1750;
+		innerCircleRadius = 1400;
 	}
 
 	ofLog() << zone << endl;
@@ -55,12 +54,11 @@ void textBlock::update() {
 
 void textBlock::draw() {
 	
-	ofFill();
-	ofSetLineWidth(0);
-
-	ofSetColor(ofColor::black);
-
 	//string testText = "Lorem ipsum \n dolor sit amet.";
+	ofNoFill();
+	ofSetLineWidth(5);
+	ofCircle(pos.x - 30, pos.y - 10, 0, 15);
+
 	itemFont.drawString(text, pos.x, pos.y);
 	itemFont.setLineHeight(25);
 }
