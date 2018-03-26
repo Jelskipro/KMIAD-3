@@ -1,23 +1,26 @@
 #include "ofApp.h"
 
 void ofApp::setup() {
-	gui.setup("Instellingen", "settings.xml");
-	gui.add(xPos.set("xPos", 0, 0, -3000));
-	gui.add(yPos.set("yPos", 0, 0, 3000));
-
 	ofSetCircleResolution(60);
 
+	//Laad de fonts.
 	font.load("Futura PT Heavy.ttf", 200);
 	circleFont.load("Futura PT Heavy.ttf", 50);
+
+	//Laad de foto voor het ribbel lijntje. 
 	ripple.load("Ripple.png");
 
 	string databasePath = ofToDataPath("allergiezonedb.db", true);
 	db = new SQLite::Database(databasePath);
 	
 	ofSetBackgroundColor(ofColor(249, 249, 225));
-	cam.setPosition(0, 0, 4000);
+
+	//Zorg ervoor dat de camera een mooi afstand heeft vanaf het begin.
+	cam.setDistance(4000);
 
 	query = new SQLite::Statement(*db, "select gk.name, s.stellingid, s.stelling, c.categorie, gk.zone from stellingen s left join GebruikerKeuze gk on s.stellingId = gk.stellingId left join categorie c on c.categorieId = s.categorieId where gk.name=?");
+
+	//2e query voor de gebruiker waarmee je vergelijkt. Zelfde als de bovenste.
 	queryCompare = new SQLite::Statement(*db, "select gk.name, s.stellingid, s.stelling, c.categorie, gk.zone from stellingen s left join GebruikerKeuze gk on s.stellingId = gk.stellingId left join categorie c on c.categorieId = s.categorieId where gk.name=?");
 }
 
@@ -29,19 +32,21 @@ void ofApp::update() {
 		textBlocksCompare[i].update();
 	}
 
+	//Query om alle gebruikers uit de database te halen.
 	SQLite::Statement usersQuery(*db, "Select * FROM Gebruiker");
+	
+	//Kijk naar hoeveel gebruikers er zijn in totaal.
 	maxUsers = db->execAndGet("SELECT COUNT(Name) FROM Gebruiker").getInt();
 	while (usersQuery.executeStep())
 	{	
-		userNames.push_back(usersQuery.getColumn("Name")); // add an element
+		//Zet de gebruikers in een vector
+		userNames.push_back(usersQuery.getColumn("Name"));
 
 	}
 
 }
 
 void ofApp::draw() {
-	gui.draw();
-
 	cam.setVFlip(true);
 	cam.begin();
 	
@@ -67,10 +72,11 @@ void ofApp::draw() {
 	ofSetColor(allergieDonkerGroen);
 	ofCircle(0, 0, zoneCircleRadius * 5);
 
-
+	//Teken de ribbel lijn.
 	ofSetColor(allergieRood);
 	ripple.draw(-205, 20, 410, 25);
 	
+	//Teken alle zone anduidingen.
 	ofSetColor(tekstZwart);
 	circleFont.drawString("Allergie zone", -200, 0);
 	circleFont.drawString("Kut", zoneCircleRadius + 10, 0);
@@ -79,12 +85,14 @@ void ofApp::draw() {
 	circleFont.drawString("Prima", zoneCircleRadius * 4 + 10, 0);
 	circleFont.drawString("Geweldig", zoneCircleRadius * 5 + 10, 0);
 	
+	//Teken de huidige geselecteerde gebruiker.
 	font.drawString(userNames[currentUser], -2000, -2000);
 	ofSetColor(tekstBlauw);
+	//Teken de huidige geselecteerde gebruiker waarmee je wilt vergelijken.
 	font.drawString(userNames[currentUserCompare], 2000, -2000);
 	ofSetColor(tekstZwart);
 
-
+	//Bind de huidige gebruiker aan de query
 	query->bind(1, userNames[currentUser]);
 	while (query->executeStep())
 	{
@@ -92,17 +100,19 @@ void ofApp::draw() {
 		for (unsigned int i = 0; i < textBlocks.size(); i++) {
 			textBlocks[i].draw();
 		}
+		//Zorg dat hij zoveel blokken aan maakt als dat er stellingen zijn. 
 		if (a < 13) {
+			//Voer de functie uit om een tekst block te maken, vraag de zone, content en categorie op.
 			dataDing(query->getColumn("stelling"), query->getColumn("zone"), query->getColumn("categorie"));
 			
 		}
-		
-
 	}
+	//Reset de query weer zodat de volgende uitgevoerd kan worden.
 	query->reset();
 
 	ofSetColor(tekstBlauw);
 
+	//Doe hetzelfde als hierboven maar dan voor de gebruiker waarmee je wilt vergelijken.
 	queryCompare->bind(1, userNames[currentUserCompare]);
 	while (queryCompare->executeStep())
 	{
@@ -117,34 +127,30 @@ void ofApp::draw() {
 
 
 	}
+	//Reset ook deze query weer.
 	queryCompare->reset();
-
-	//ofLog() << currentUser << endl;
-	//cout << userNames[currentUser] << endl;
-	mousePos = ofVec3f(ofGetMouseX(), ofGetMouseY(), 4000);
-
-	worldMousePos = cam.screenToWorld(ofVec3f(ofGetMouseX(), ofGetMouseY(), 0), ofGetCurrentViewport());
-
-	ofLog() << worldMousePos << endl;
 	
 	cam.end();
-
-
 }
 
 void ofApp::keyPressed(int key) {
+	//Als je op rechter pijltje drukt en je niet op het max aantal gebruikers zit ga 1 plek omhoog in de vector van gebruikers
 	if (key == OF_KEY_RIGHT && currentUser < (maxUsers - 1)) {
+		//1 gebruiker omhoog.
 		currentUser += 1;
+		//Maak de vector van tekstblokken leeg zodat de oude van de vorige gebruiker weg gaan.
 		textBlocks.clear();
+		//Zet a weer op nul zodat het if statement weer uitgevoerd wordt.
 		a = 0;
 
 	}
+	//Zelfde als hierboven maar dan voor achteruit gaan in de vector van gebruikers
 	if (key == OF_KEY_LEFT && currentUser > 0) {
 		currentUser -= 1;
 		textBlocks.clear();
 		a = 0;
 	}
-
+	//Zelfde maar dan voor de gebruikers waarmee je vergelijkt.
 	if (key == OF_KEY_UP && currentUserCompare < (maxUsers - 1)) {
 		currentUserCompare += 1;
 		textBlocksCompare.clear();
@@ -163,22 +169,11 @@ void ofApp::mouseMoved(int x, int y) {
 
 }
 void ofApp::mousePressed(int x, int y, int button) {
-	if (button == 0 && zoomedIn == false) {
-
-		//cam.setPosition(mousePos.x, mousePos.y, 2000);
-		zoomIn();
-		zoomedIn = true;
-	}
-	else
-	{
-		cam.setPosition(0, 0, 4000);
-		zoomedIn = false;
-
-	}
+	
 	
 }
 void ofApp::dataDing(string content, string zone, string category) {
-	
+	//Maak een nieuw tekstblock aan met de tekstBlock class.
 	textBlock newTextBlock;
 	newTextBlock.setup(content, zone, category);
 	textBlocks.push_back(newTextBlock);
@@ -195,6 +190,7 @@ void ofApp::dataDingCompare(string content, string zone, string category) {
 }
 void ofApp::zoomIn()
 {
-	cam.setPosition(worldMousePos.x, worldMousePos.y, 2000);
+	//Oude troep.
+	//cam.setPosition(worldMousePos.x, worldMousePos.y, 2000);
 
 }

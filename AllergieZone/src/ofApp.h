@@ -21,14 +21,13 @@ private:
 	ofTrueTypeFont font;
 	ofTrueTypeFont circleFont;
 
-	ofCamera cam;
-
-	ofxPanel gui;
+	ofEasyCam cam;
 
 	SQLite::Database* db;
 	SQLite::Statement* query;
 	SQLite::Statement* queryCompare;
 
+	//zet de kleuren die ik wil in hex want fuck rbg :)
 	ofColor tekstZwart = ofColor::fromHex(000000);
 	ofColor tekstBlauw = ofColor::fromHex(0x539dba);
 	ofColor allergieRood = ofColor::fromHex(0xea3a44);
@@ -39,10 +38,6 @@ private:
 	
 	ofImage ripple;
 
-	ofParameter<float> xPos;
-	ofParameter<float> yPos;
-
-	
 	int a = 0;
 	int b = 0;
 	int maxUsers;
@@ -50,12 +45,9 @@ private:
 	int currentUserCompare;
 	float zoneKutRadius;
 	float zoneCircleRadius = 350;
-	bool zoomedIn = false;
 
 	ofVec3f mousePos;
 	ofVec3f worldMousePos;
-
-	map<string, double> annoyanceByZone;
 
 	string zones[5] = {"kut", "irritant", "neutraal", "prima", "geweldig"};
 
