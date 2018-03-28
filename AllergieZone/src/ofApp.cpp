@@ -6,6 +6,7 @@ void ofApp::setup() {
 	//Laad de fonts.
 	font.load("Futura PT Heavy.ttf", 200);
 	circleFont.load("Futura PT Heavy.ttf", 50);
+	blockFont.load("Futura PT Book.ttf", 25);
 
 	//Laad de foto voor het ribbel lijntje. 
 	ripple.load("Ripple.png");
@@ -101,7 +102,7 @@ void ofApp::draw() {
 			textBlocks[i].draw();
 		}
 		//Zorg dat hij zoveel blokken aan maakt als dat er stellingen zijn. 
-		if (a < 13) {
+		if (a < 25) {
 			//Voer de functie uit om een tekst block te maken, vraag de zone, content en categorie op.
 			dataDing(query->getColumn("stelling"), query->getColumn("zone"), query->getColumn("categorie"));
 			
@@ -120,7 +121,7 @@ void ofApp::draw() {
 		for (unsigned int i = 0; i < textBlocksCompare.size(); i++) {
 			textBlocksCompare[i].draw();
 		}
-		if (b < 13) {
+		if (b < 25) {
 			dataDingCompare(queryCompare->getColumn("stelling"), queryCompare->getColumn("zone"), queryCompare->getColumn("categorie"));
 
 		}
@@ -175,14 +176,14 @@ void ofApp::mousePressed(int x, int y, int button) {
 void ofApp::dataDing(string content, string zone, string category) {
 	//Maak een nieuw tekstblock aan met de tekstBlock class.
 	textBlock newTextBlock;
-	newTextBlock.setup(content, zone, category);
+	newTextBlock.setup(content, zone, category, blockFont);
 	textBlocks.push_back(newTextBlock);
 	a++;
 }
 void ofApp::dataDingCompare(string content, string zone, string category) {
 
 	textBlock newTextBlockCompare;
-	newTextBlockCompare.setup(content, zone, category);
+	newTextBlockCompare.setup(content, zone, category, blockFont);
 	textBlocksCompare.push_back(newTextBlockCompare);
 	b++;
 

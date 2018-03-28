@@ -8,7 +8,7 @@ public:
 
 	textBlock();
 
-	void setup(string textContent, string textZone, string textCategory);
+	void setup(string textContent, string textZone, string textCategory, ofTrueTypeFont blockFont);
 
 	void update();
 

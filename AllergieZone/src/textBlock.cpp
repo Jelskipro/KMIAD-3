@@ -3,11 +3,12 @@
 textBlock::textBlock() {
 }
 
-void textBlock::setup(string textContent, string textZone, string textCategory) {
+void textBlock::setup(string textContent, string textZone, string textCategory, ofTrueTypeFont blockFont) {
 	
 	text = textContent;
 	zone = textZone;
 	category = textCategory;
+	itemFont = blockFont;
 
 	//Kijk in welke zone deze tekstblock moet komen en zet de waarde.
 	if (zone == "Kut")
@@ -36,7 +37,7 @@ void textBlock::setup(string textContent, string textZone, string textCategory) 
 		innerCircleRadius = 1400;
 	}
 
-	itemFont.load("Futura PT Book.ttf", 25);
+	//itemFont.load("Futura PT Book.ttf", 25);
 	
 	//Zorg ervoor dat hij binnen de circle wordt getekend
 	float distance = ofRandom(innerCircleRadius, cricleRadius);

@@ -20,6 +20,7 @@ public:
 private:
 	ofTrueTypeFont font;
 	ofTrueTypeFont circleFont;
+	ofTrueTypeFont blockFont;
 
 	ofEasyCam cam;
 
