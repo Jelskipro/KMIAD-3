@@ -2,6 +2,7 @@
 Op deze repository staan mijn huiswerk odpracht en eindproject voor kernmodule 3.
 
 ## Allergie zone
+![AllergieZone](Logo.png "AllergieZone")
 
 Allergie zone is mijn eindopdracht. Deze is gemaakt in Openframeworks. 
 Het brengt hoe jij denkt over irritaties in kaart en vergelijkt het met andere.
